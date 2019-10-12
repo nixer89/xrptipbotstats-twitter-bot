@@ -1,0 +1,39 @@
+{
+  "name": "xrptipbotstats-twitter-bot",
+  "version": "0.0.1",
+  "description": "xrptipbotstats-twitter-bot to tweet about the latest stats",
+  "main": "server.ts",
+  "scripts": {
+    "start": "node dist/server.js",
+    "develop": "tsc && concurrently \"tsc -w\" \"nodemon dist/server.js\"",
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nixer89/xrptipbotstats-twitter-bot"
+  },
+  "author": "Good Souls Group",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nixer89/xrptipbotstats-twitter-bot/issues"
+  },
+  "homepage": "https://github.com/nixer89/xrptipbotstats-twitter-bot#readme",
+  "dependencies": {
+    "console-stamp": "^0.2.9",
+    "https-proxy-agent": "^2.2.2",
+    "node-fetch": "^2.6.0",
+    "shuffle-array": "^1.0.1",
+    "twit": "^2.2.11",
+    "typescript": "^3.6.3"
+  },
+  "devDependencies": {
+    "@types/console-stamp": "^0.2.32",
+    "@types/node": "^11.13.20",
+    "@types/node-fetch": "^2.5.1",
+    "@types/shuffle-array": "0.0.28",
+    "@types/twit": "^2.2.22",
+    "concurrently": "^4.1.2",
+    "nodemon": "^1.19.2"
+  }
+}
