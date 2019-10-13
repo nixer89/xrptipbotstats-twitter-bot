@@ -1,4 +1,4 @@
-import * as shuffle from 'shuffle-array';
+import * as schedule from 'node-schedule';
 import * as Stats from './api/statsApi';
 import * as Twitter from './api/twitterApi';
 import * as config from './config/config';
@@ -29,8 +29,16 @@ async function initBot() {
             writeToConsole("Could not init twitter or tipbot. Bot not working.")
             process.stdin.resume();
         }
+        //everything is ok. start the scheduling!
         else {
-            collectHourlyStats();
+            let recurrenceRuleHourly:schedule.RecurrenceRule = new schedule.RecurrenceRule()
+            recurrenceRuleHourly.minute = 5;
+            schedule.scheduleJob('HourlyExecution', recurrenceRuleHourly, ()=>{ collectHourlyStats()});
+
+            let recurrenceRuleDaily:schedule.RecurrenceRule = new schedule.RecurrenceRule()
+            recurrenceRuleDaily.hour= 0;
+            recurrenceRuleDaily.minute = 5;
+            schedule.scheduleJob('DailyExecution', recurrenceRuleDaily, ()=>{ collectDailyStats()});
         }
     } catch(err) {
         this.writeToConsole(JSON.stringify(err));
@@ -38,22 +46,76 @@ async function initBot() {
 }
 
 async function collectHourlyStats() {
-    let to_date = setZeroTime(new Date());
-    let from_date = setZeroTime(new Date());
+    let to_date = util.setZeroMinutes(new Date());
+    let from_date = util.setZeroMinutes(new Date());
     from_date.setHours(from_date.getHours()-1);
 
-    let tipsLastHour = await statsApi.getNumberOfTipsLastHour(from_date, to_date);
-    let xrpSentLastHour = await statsApi.getNumberOfXRPSentLastHour(from_date, to_date);
+    await generateOverallTweet("hour",from_date, to_date);
+
+    await generateTopUserTweet("hour",from_date, to_date);
 }
 
-function setZeroTime(date: Date): Date {
-    date.setMinutes(0);
-    date.setSeconds(0);
-    date.setMilliseconds(0);
+async function collectDailyStats() {
+    let to_date = util.setZeroHours(new Date());
+    let from_date = util.setZeroHours(new Date());
+    from_date.setDate(from_date.getDate()-1);
 
-    return date;
+    await generateOverallTweet("hour",from_date, to_date);
+
+    await generateTopUserTweet("hour",from_date, to_date);
 }
 
+async function generateOverallTweet(timeframe:string, from_date: Date, to_date: Date): Promise<any> {
+    let tipsLastHour = await statsApi.getNumberOfTips(from_date, to_date);
+    let xrpSentLastHour = await statsApi.getNumberOfXRPSent(from_date, to_date);
+    let highestDeposit = await statsApi.getHighestDeposit(from_date, to_date);
+    let highestWithdraw = await statsApi.getHighestWithdraw(from_date, to_date);
+
+    let overallTweet = "Overall @xrptipbot stats for the last "+timeframe+":\n\n";
+    overallTweet+= "# of tips: " + tipsLastHour + "\n";
+    overallTweet+= xrpSentLastHour+" #XRP has been sent across.\n";
+    overallTweet+= (highestDeposit ? "Highest Deposit: " + highestDeposit.xrp + " $XRP.":"");
+    overallTweet+= (highestWithdraw ? "\nHighest Withdraw: " + highestWithdraw.xrp + " $XRP.":"");
+    overallTweet+= util.getLinkTextOverall(from_date,to_date);
+
+    console.log(overallTweet)
+    //twitterAPI.sendTweet(overallTweet);
+}
+
+async function generateTopUserTweet(timeframe:string, from_date:Date, to_date:Date): Promise<any> {
+    let random:number = util.getRandomInt(4);
+    let topStatsTweet:string = "@xrptipbot stats in the last "+timeframe+":\n\n";
+
+    switch(random) {
+        case 0: {
+            let mostReceivedTips = await statsApi.getMostReceivedTips(from_date, to_date);
+            topStatsTweet+= util.getUserNameNetwork(mostReceivedTips[0]) + " received the most tips in the last"+timeframe+": " + mostReceivedTips[0].count +" tips.\n\n";
+            topStatsTweet+= util.getLinkTextUser(mostReceivedTips[0],from_date, to_date);
+            break;
+        }
+        case 1: {
+            let mostReceivedXRP = await statsApi.getMostReceivedXRP(from_date, to_date);
+            topStatsTweet+= util.getUserNameNetwork(mostReceivedXRP[0]) + " received the most #XRP in the last "+timeframe+": " + mostReceivedXRP[0].xrp +" $XRP.\n\n";
+            topStatsTweet+= util.getLinkTextUser(mostReceivedXRP[0],from_date, to_date);
+            break;
+        }
+        case 2: {
+            let mostSentTips = await statsApi.getMostSentTips(from_date, to_date);
+            topStatsTweet+= util.getUserNameNetwork(mostSentTips[0]) + " sent the most tips in the last "+timeframe+": " + mostSentTips[0].count +" tips.\n\n";
+            topStatsTweet+= util.getLinkTextUser(mostSentTips[0],from_date, to_date);
+            break;
+        }
+        case 3: {
+            let mostSentXRP = await statsApi.getMostSentXRP(from_date, to_date);
+            topStatsTweet+= util.getUserNameNetwork(mostSentXRP[0]) + " sent the most #XRP in the last "+timeframe+": " + mostSentXRP[0].xrp +" $XRP.\n\n";
+            topStatsTweet+= util.getLinkTextUser(mostSentXRP[0],from_date, to_date);
+            break;
+        }
+    }
+
+    console.log(topStatsTweet)
+    //twitterAPI.sendTweet(topStatsTweet);
+}
 async function initTwitterAndTipbot(): Promise<boolean> {
     try {
         writeToConsole("init REAL")
