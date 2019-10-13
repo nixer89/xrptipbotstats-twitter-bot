@@ -79,7 +79,7 @@ async function generateOverallTweet(timeframe:string, from_date: Date, to_date: 
     overallTweet+= util.getLinkTextOverall(from_date,to_date);
 
     console.log(overallTweet)
-    //twitterAPI.sendTweet(overallTweet);
+    twitterAPI.sendTweet(overallTweet);
 }
 
 async function generateTopUserTweet(timeframe:string, from_date:Date, to_date:Date): Promise<any> {
@@ -114,7 +114,7 @@ async function generateTopUserTweet(timeframe:string, from_date:Date, to_date:Da
     }
 
     console.log(topStatsTweet)
-    //twitterAPI.sendTweet(topStatsTweet);
+    twitterAPI.sendTweet(topStatsTweet);
 }
 async function initTwitterAndTipbot(): Promise<boolean> {
     try {
