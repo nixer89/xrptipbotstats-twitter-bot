@@ -76,8 +76,8 @@ async function generateOverallTweet(timeframe:string, from_date: Date, to_date: 
     overallTweet+= "# of tips: " + numberOfTips + "\n";
     overallTweet+= amountOfXRPsent+" #XRP has been sent across.\n";
     overallTweet+= "ILP Deposits: " + ilpDepositsXRP + " $XRP.\n"
-    overallTweet+= (highestDeposit ? "Highest Deposit: " + highestDeposit.xrp + " $XRP.":"");
-    overallTweet+= (highestWithdraw ? "\nHighest Withdraw: " + highestWithdraw.xrp + " $XRP.":"");
+    overallTweet+= (highestDeposit ? "Highest Deposit: " + highestDeposit.xrp + " $XRP.\n":"");
+    overallTweet+= (highestWithdraw ? "Highest Withdraw: " + highestWithdraw.xrp + " $XRP.":"");
     overallTweet+= util.getLinkTextOverall(from_date,to_date);
 
     console.log(overallTweet)
@@ -85,31 +85,30 @@ async function generateOverallTweet(timeframe:string, from_date: Date, to_date: 
 }
 
 async function generateTopUserTweet(timeframe:string, from_date:Date, to_date:Date): Promise<any> {
-    let random:number = util.getRandomInt(4);
     let topStatsTweet:string = "@xrptipbot stats in the last "+timeframe+":\n\n";
 
-    switch(random) {
+    switch(util.getRandomInt(4)) {
         case 0: {
             let mostReceivedTips = await statsApi.getMostReceivedTips(from_date, to_date);
-            topStatsTweet+= util.getUserNameNetwork(mostReceivedTips[0]) + " received the most tips in the last"+timeframe+": " + mostReceivedTips[0].count +" tips.\n\n";
+            topStatsTweet+= util.getUserNameNetwork(mostReceivedTips[0]) + " received the most tips in the last"+timeframe+": " + mostReceivedTips[0].count +" tips.";
             topStatsTweet+= util.getLinkTextUser(mostReceivedTips[0],from_date, to_date);
             break;
         }
         case 1: {
             let mostReceivedXRP = await statsApi.getMostReceivedXRP(from_date, to_date);
-            topStatsTweet+= util.getUserNameNetwork(mostReceivedXRP[0]) + " received the most #XRP in the last "+timeframe+": " + mostReceivedXRP[0].xrp +" $XRP.\n\n";
+            topStatsTweet+= util.getUserNameNetwork(mostReceivedXRP[0]) + " received the most #XRP in the last "+timeframe+": " + mostReceivedXRP[0].xrp +" $XRP.";
             topStatsTweet+= util.getLinkTextUser(mostReceivedXRP[0],from_date, to_date);
             break;
         }
         case 2: {
             let mostSentTips = await statsApi.getMostSentTips(from_date, to_date);
-            topStatsTweet+= util.getUserNameNetwork(mostSentTips[0]) + " sent the most tips in the last "+timeframe+": " + mostSentTips[0].count +" tips.\n\n";
+            topStatsTweet+= util.getUserNameNetwork(mostSentTips[0]) + " sent the most tips in the last "+timeframe+": " + mostSentTips[0].count +" tips.";
             topStatsTweet+= util.getLinkTextUser(mostSentTips[0],from_date, to_date);
             break;
         }
         case 3: {
             let mostSentXRP = await statsApi.getMostSentXRP(from_date, to_date);
-            topStatsTweet+= util.getUserNameNetwork(mostSentXRP[0]) + " sent the most #XRP in the last "+timeframe+": " + mostSentXRP[0].xrp +" $XRP.\n\n";
+            topStatsTweet+= util.getUserNameNetwork(mostSentXRP[0]) + " sent the most #XRP in the last "+timeframe+": " + mostSentXRP[0].xrp +" $XRP.";
             topStatsTweet+= util.getLinkTextUser(mostSentXRP[0],from_date, to_date);
             break;
         }
@@ -118,6 +117,7 @@ async function generateTopUserTweet(timeframe:string, from_date:Date, to_date:Da
     console.log(topStatsTweet)
     twitterAPI.sendTweet(topStatsTweet);
 }
+
 async function initTwitterAndTipbot(): Promise<boolean> {
     try {
         writeToConsole("init REAL")
