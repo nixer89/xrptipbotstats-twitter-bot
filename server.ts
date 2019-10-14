@@ -33,7 +33,7 @@ async function initBot() {
 
             let recurrenceRuleDaily:schedule.RecurrenceRule = new schedule.RecurrenceRule()
             recurrenceRuleDaily.hour= 22;
-            recurrenceRuleDaily.minute = 9;
+            recurrenceRuleDaily.minute = 11;
             schedule.scheduleJob('DailyExecution', recurrenceRuleDaily, ()=>{ collectDailyStats()});
         }
     } catch(err) {
