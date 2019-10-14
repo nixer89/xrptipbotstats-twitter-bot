@@ -8,25 +8,25 @@ consoleStamp(console, { pattern: 'yyyy-mm-dd HH:MM:ss' });
 export class StatsApi {
 
     async getNumberOfTips(from:Date, to:Date): Promise<number> {
-        let apiResponse = await this.callCountApi("?type=tip&from_date="+from.toLocaleString()+"&to_date="+to.toLocaleString());
+        let apiResponse = await this.callCountApi("?type=tip",from, to);
         //console.log(apiResponse);
         return apiResponse.count;
     }
 
     async getNumberOfXRPSent(from:Date, to:Date): Promise<number> {
-        let apiResponse = await this.callAggregateApi("/xrp?type=tip&from_date="+from.toLocaleString()+"&to_date="+to.toLocaleString());
+        let apiResponse = await this.callAggregateApi("/xrp?type=tip",from, to);
         //console.log(apiResponse);
         return apiResponse.xrp;
     }
 
     async getXRPDepositsILP(from:Date, to:Date): Promise<number> {
-        let apiResponse = await this.callAggregateILPApi("/xrp?type=ILP deposit&from_date="+from.toLocaleString()+"&to_date="+to.toLocaleString());
+        let apiResponse = await this.callAggregateILPApi("/xrp?type=ILP deposit",from, to);
         //console.log(apiResponse);
         return apiResponse.amount/1000000;
     }
 
     async getHighestDeposit(from:Date, to:Date): Promise<any> {
-        let apiResponse = await this.callFeedApi("?type=deposit&from_date="+from.toLocaleString()+"&to_date="+to.toLocaleString());
+        let apiResponse = await this.callFeedApi("?type=deposit",from, to);
         //console.log(apiResponse);
 
         let deposits:any[] = apiResponse.feed;
@@ -36,7 +36,7 @@ export class StatsApi {
     }
 
     async getHighestWithdraw(from:Date, to:Date): Promise<any> {
-        let apiResponse = await this.callFeedApi("?type=withdraw&from_date="+from.toLocaleString()+"&to_date="+to.toLocaleString());
+        let apiResponse = await this.callFeedApi("?type=withdraw",from, to);
         //console.log(apiResponse);
 
         let withdraws:any[] = apiResponse.feed;
@@ -46,44 +46,44 @@ export class StatsApi {
     }
 
     async getMostReceivedXRP(from:Date, to:Date): Promise<any[]> {
-        let apiResponse = await this.callAggregateApi("/xrp/mostSentTo?type=tip&limit=5&from_date="+from.toLocaleString()+"&to_date="+to.toLocaleString());
+        let apiResponse = await this.callAggregateApi("/xrp/mostSentTo?type=tip&limit=5",from, to);
         return apiResponse.result;
     }
 
     async getMostSentXRP(from:Date, to:Date): Promise<any[]> {
-        let apiResponse = await this.callAggregateApi("/xrp/mostReceivedFrom?type=tip&limit=5&from_date="+from.toLocaleString()+"&to_date="+to.toLocaleString());
+        let apiResponse = await this.callAggregateApi("/xrp/mostReceivedFrom?type=tip&limit=5",from, to);
         return apiResponse.result;
     }
 
     async getMostReceivedTips(from:Date, to:Date): Promise<any[]> {
-        let apiResponse = await this.callCountApi("/mostSentTo?type=tip&limit=5&from_date="+from.toLocaleString()+"&to_date="+to.toLocaleString());
+        let apiResponse = await this.callCountApi("/mostSentTo?type=tip&limit=5",from, to);
         return apiResponse.result;
     }
 
     async getMostSentTips(from:Date, to:Date): Promise<any[]> {
-        let apiResponse = await this.callCountApi("/mostReceivedFrom?type=tip&limit=5&from_date="+from.toLocaleString()+"&to_date="+to.toLocaleString());
+        let apiResponse = await this.callCountApi("/mostReceivedFrom?type=tip&limit=5",from, to);
         return apiResponse.result;
     }
 
-    async callAggregateApi(queryParams:string) {
-        return this.callStatsApi(config.TIPBOT_AGGREGATE_API+queryParams);
+    async callAggregateApi(queryParams:string, from_date:Date, to_date:Date) {
+        return this.callStatsApi(config.TIPBOT_AGGREGATE_API+queryParams+"&from_date="+util.dateToStringEuropeForAPI(from_date)+"&to_date="+util.dateToStringEuropeForAPI(to_date));
     }
 
-    async callAggregateILPApi(queryParams:string) {
+    async callAggregateILPApi(queryParams:string, from_date:Date, to_date:Date) {
         //console.log(config.TIPBOT_AGGREGATE_ILP_API+queryParams);
-        return this.callStatsApi(config.TIPBOT_AGGREGATE_ILP_API+queryParams);
+        return this.callStatsApi(config.TIPBOT_AGGREGATE_ILP_API+queryParams+"&from_date="+util.dateToStringEuropeForAPI(from_date)+"&to_date="+util.dateToStringEuropeForAPI(to_date));
     }
 
-    async callCountApi(queryParams:string) {
-        return this.callStatsApi(config.TIPBOT_COUNT_API+queryParams);
+    async callCountApi(queryParams:string, from_date:Date, to_date:Date) {
+        return this.callStatsApi(config.TIPBOT_COUNT_API+queryParams+"&from_date="+util.dateToStringEuropeForAPI(from_date)+"&to_date="+util.dateToStringEuropeForAPI(to_date));
     }
 
-    async callFeedApi(queryParams:string) {
-        return this.callStatsApi(config.TIPBOT_FEED_API+queryParams);
+    async callFeedApi(queryParams:string, from_date:Date, to_date:Date ) {
+        return this.callStatsApi(config.TIPBOT_FEED_API+queryParams+"&from_date="+util.dateToStringEuropeForAPI(from_date)+"&to_date="+util.dateToStringEuropeForAPI(to_date));
     }
 
-    async callILPApi(queryParams:string) {
-        return this.callStatsApi(config.TIPBOT_ILP_API+queryParams);
+    async callILPApi(queryParams:string, from_date:Date, to_date:Date) {
+        return this.callStatsApi(config.TIPBOT_ILP_API+queryParams+"&from_date="+util.dateToStringEuropeForAPI(from_date)+"&to_date="+util.dateToStringEuropeForAPI(to_date));
     }
 
     async callStatsApi(url: string) : Promise<any> {

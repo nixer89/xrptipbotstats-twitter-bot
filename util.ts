@@ -51,3 +51,7 @@ export function getLinkTextUser(stats:any, from_date:Date, to_date:Date): string
 
     return linkText;
 }
+
+export function dateToStringEuropeForAPI(dateToFormat: Date): string {
+    return dateToFormat.toLocaleString("en-US", {timeZone: 'Europe/Berlin'} );
+}
