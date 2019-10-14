@@ -1,4 +1,4 @@
-//import * as schedule from 'node-schedule';
+import * as schedule from 'node-schedule';
 import * as Stats from './api/statsApi';
 import * as Twitter from './api/twitterApi';
 import * as config from './config/config';
@@ -31,14 +31,14 @@ async function initBot() {
         }
         //everything is ok. start the scheduling!
         else {
-            //let recurrenceRuleHourly:schedule.RecurrenceRule = new schedule.RecurrenceRule()
-            //recurrenceRuleHourly.minute = 5;
-            //schedule.scheduleJob('HourlyExecution', recurrenceRuleHourly, ()=>{ collectHourlyStats()});
+            let recurrenceRuleHourly:schedule.RecurrenceRule = new schedule.RecurrenceRule()
+            recurrenceRuleHourly.minute = 5;
+            schedule.scheduleJob('HourlyExecution', recurrenceRuleHourly, ()=>{ collectHourlyStats()});
 
-            //let recurrenceRuleDaily:schedule.RecurrenceRule = new schedule.RecurrenceRule()
-            //recurrenceRuleDaily.hour= 0;
-            //recurrenceRuleDaily.minute = 5;
-            //schedule.scheduleJob('DailyExecution', recurrenceRuleDaily, ()=>{ collectDailyStats()});
+            let recurrenceRuleDaily:schedule.RecurrenceRule = new schedule.RecurrenceRule()
+            recurrenceRuleDaily.hour= 0;
+            recurrenceRuleDaily.minute = 5;
+            schedule.scheduleJob('DailyExecution', recurrenceRuleDaily, ()=>{ collectDailyStats()});
         }
     } catch(err) {
         this.writeToConsole(JSON.stringify(err));
