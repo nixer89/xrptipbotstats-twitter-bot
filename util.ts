@@ -1,5 +1,3 @@
-import { link } from "fs";
-
 export function writeConsoleLog(prefixKey:string, message:string) {
     console.log(prefixKey + message);
 }
@@ -30,16 +28,16 @@ export function getRandomInt(max) {
 
 export function getLinkTextOverall(from_date:Date, to_date:Date): string {
     let linkText = "\n\nFind more interesting stats here:\n";
-    linkText+= "https://xrptipbot-stats.com/overallstatistics?from_date="+from_date.toLocaleString().split(" ").join("%20")+"&to_date="+to_date.toLocaleString().split(" ").join("%20");
-    linkText+= "\n\n(You can also deselect the preselected time 😇)";
+    linkText+= "https://xrptipbot-stats.com/overallstatistics?from_date="+from_date.toISOString()+"&to_date="+to_date.toISOString();
+    //linkText+= "\n\n(You can also deselect the preselected time 😇)";
 
     return linkText;
 }
 
 export function getLinkTextUser(stats:any, from_date:Date, to_date:Date): string {
     let linkText = "\n\nFind more interesting stats here:\n";
-    linkText+= "https://xrptipbot-stats.com/userstatistics?user="+stats.userName+"&network="+stats['_id'].network+"&from_date="+from_date.toLocaleString().split(" ").join("%20")+"&to_date="+to_date.toLocaleString().split(" ").join("%20");
-    linkText+= "\n\n(You can also deselect the preselected time 😇)";
+    linkText+= "https://xrptipbot-stats.com/userstatistics?user="+stats.userName+"&network="+stats['_id'].network+"&from_date="+from_date.toISOString()+"&to_date="+to_date.toISOString();
+    //linkText+= "\n\n(You can also deselect the preselected time 😇)";
 
     return linkText;
 }

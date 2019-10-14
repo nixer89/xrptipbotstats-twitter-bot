@@ -60,20 +60,22 @@ async function collectDailyStats() {
     let from_date = util.setZeroHours(new Date());
     from_date.setDate(from_date.getDate()-1);
 
-    await generateOverallTweet("hour",from_date, to_date);
+    await generateOverallTweet("24h",from_date, to_date);
 
-    await generateTopUserTweet("hour",from_date, to_date);
+    await generateTopUserTweet("24h",from_date, to_date);
 }
 
 async function generateOverallTweet(timeframe:string, from_date: Date, to_date: Date): Promise<any> {
-    let tipsLastHour = await statsApi.getNumberOfTips(from_date, to_date);
-    let xrpSentLastHour = await statsApi.getNumberOfXRPSent(from_date, to_date);
+    let numberOfTips = await statsApi.getNumberOfTips(from_date, to_date);
+    let amountOfXRPsent = await statsApi.getNumberOfXRPSent(from_date, to_date);
+    let ilpDepositsXRP = await statsApi.getXRPDepositsILP(from_date, to_date);
     let highestDeposit = await statsApi.getHighestDeposit(from_date, to_date);
     let highestWithdraw = await statsApi.getHighestWithdraw(from_date, to_date);
 
     let overallTweet = "Overall @xrptipbot stats for the last "+timeframe+":\n\n";
-    overallTweet+= "# of tips: " + tipsLastHour + "\n";
-    overallTweet+= xrpSentLastHour+" #XRP has been sent across.\n";
+    overallTweet+= "# of tips: " + numberOfTips + "\n";
+    overallTweet+= amountOfXRPsent+" #XRP has been sent across.\n";
+    overallTweet+= "ILP Deposits: " + ilpDepositsXRP + " $XRP.\n"
     overallTweet+= (highestDeposit ? "Highest Deposit: " + highestDeposit.xrp + " $XRP.":"");
     overallTweet+= (highestWithdraw ? "\nHighest Withdraw: " + highestWithdraw.xrp + " $XRP.":"");
     overallTweet+= util.getLinkTextOverall(from_date,to_date);

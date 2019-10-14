@@ -19,6 +19,12 @@ export class StatsApi {
         return apiResponse.xrp;
     }
 
+    async getXRPDepositsILP(from:Date, to:Date): Promise<number> {
+        let apiResponse = await this.callAggregateILPApi("/xrp?type=ILP deposit&from_date="+from.toLocaleString()+"&to_date="+to.toLocaleString());
+        //console.log(apiResponse);
+        return apiResponse.amount/1000000;
+    }
+
     async getHighestDeposit(from:Date, to:Date): Promise<any> {
         let apiResponse = await this.callFeedApi("?type=deposit&from_date="+from.toLocaleString()+"&to_date="+to.toLocaleString());
         //console.log(apiResponse);
@@ -64,6 +70,7 @@ export class StatsApi {
     }
 
     async callAggregateILPApi(queryParams:string) {
+        //console.log(config.TIPBOT_AGGREGATE_ILP_API+queryParams);
         return this.callStatsApi(config.TIPBOT_AGGREGATE_ILP_API+queryParams);
     }
 
