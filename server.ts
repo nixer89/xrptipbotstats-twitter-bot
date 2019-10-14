@@ -58,8 +58,8 @@ async function collectHourlyStats() {
 }
 
 async function collectDailyStats() {
-    let to_date = util.setZeroHours(new Date());
-    let from_date = util.setZeroHours(new Date());
+    let to_date = util.setZeroMinutes(new Date());
+    let from_date = util.setZeroMinutes(new Date());
     from_date.setDate(from_date.getDate()-1);
 
     await generateOverallTweet("24h",from_date, to_date);
