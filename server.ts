@@ -8,10 +8,6 @@ import consoleStamp = require("console-stamp");
 consoleStamp(console, { pattern: 'yyyy-mm-dd HH:MM:ss' });
 
 let twitterAPI:Twitter.TwitterApi;
-
-let botAccounts:string[] = ['1059563470952247296', '1088476019399577602', '1077305457268658177', '1131106826819444736', '1082115799840632832', '1106106412713889792','52249814', '1038519523077484545'];
-let noTweetUsers:string[] = ['1023321496670883840']
-
 let statsApi:Stats.StatsApi = new Stats.StatsApi();
 
 initBot();
@@ -31,8 +27,6 @@ async function initBot() {
         }
         //everything is ok. start the scheduling!
         else {
-            collectHourlyStats();
-            collectDailyStats();
             let recurrenceRuleHourly:schedule.RecurrenceRule = new schedule.RecurrenceRule()
             recurrenceRuleHourly.minute = 5;
             schedule.scheduleJob('HourlyExecution', recurrenceRuleHourly, ()=>{ collectHourlyStats()});
@@ -122,10 +116,11 @@ async function generateTopUserTweet(timeframe:string, from_date:Date, to_date:Da
 
 async function initTwitterAndTipbot(): Promise<boolean> {
     try {
-        writeToConsole("init REAL")
+        writeToConsole("connecting twitter...")
         //init twitter and get friend list
         twitterAPI = new Twitter.TwitterApi(config.TWITTER_CONSUMER_KEY, config.TWITTER_CONSUMER_SECRET, config.TWITTER_ACCESS_TOKEN, config.TWITTER_ACCESS_SECRET);
         await twitterAPI.initTwitter();
+        writeToConsole("twitter connected.")
     } catch(err) {
         //initialization failed
         writeToConsole("error: " + JSON.stringify(err));
