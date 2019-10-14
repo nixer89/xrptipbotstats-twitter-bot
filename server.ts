@@ -33,7 +33,7 @@ async function initBot() {
 
             let recurrenceRuleDaily:schedule.RecurrenceRule = new schedule.RecurrenceRule()
             recurrenceRuleDaily.hour= 22;
-            recurrenceRuleDaily.minute = 11;
+            recurrenceRuleDaily.minute = 6;
             schedule.scheduleJob('DailyExecution', recurrenceRuleDaily, ()=>{ collectDailyStats()});
         }
     } catch(err) {
@@ -71,9 +71,9 @@ async function generateOverallTweet(timeframe:string, from_date: Date, to_date: 
     let overallTweet = "Overall @xrptipbot stats for the last "+timeframe+":\n\n";
     overallTweet+= "# of tips: " + numberOfTips + "\n";
     overallTweet+= amountOfXRPsent+" #XRP has been sent across.\n";
-    overallTweet+= "ILP Deposits: " + ilpDepositsXRP + " $XRP.\n"
-    overallTweet+= (highestDeposit ? "Highest Deposit: " + highestDeposit.xrp + " $XRP.\n":"");
-    overallTweet+= (highestWithdraw ? "Highest Withdraw: " + highestWithdraw.xrp + " $XRP.":"");
+    overallTweet+= "ILP deposits: " + ilpDepositsXRP + " $XRP.\n"
+    overallTweet+= (highestDeposit ? "Highest deposit: " + highestDeposit.xrp + " $XRP.\n":"");
+    overallTweet+= (highestWithdraw ? "Highest eithdraw: " + highestWithdraw.xrp + " $XRP.":"");
     overallTweet+= util.getLinkTextOverall(from_date,to_date);
 
     console.log(overallTweet)
@@ -81,7 +81,7 @@ async function generateOverallTweet(timeframe:string, from_date: Date, to_date: 
 }
 
 async function generateTopUserTweet(timeframe:string, from_date:Date, to_date:Date): Promise<any> {
-    let topStatsTweet:string = "@xrptipbot stats in the last "+timeframe+":\n\n";
+    let topStatsTweet:string = "@xrptipbot stats for the last "+timeframe+":\n\n";
 
     switch(util.getRandomInt(4)) {
         case 0: {
