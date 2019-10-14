@@ -31,6 +31,8 @@ async function initBot() {
         }
         //everything is ok. start the scheduling!
         else {
+            collectHourlyStats();
+            collectDailyStats();
             let recurrenceRuleHourly:schedule.RecurrenceRule = new schedule.RecurrenceRule()
             recurrenceRuleHourly.minute = 5;
             schedule.scheduleJob('HourlyExecution', recurrenceRuleHourly, ()=>{ collectHourlyStats()});
