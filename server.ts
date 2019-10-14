@@ -32,8 +32,8 @@ async function initBot() {
             schedule.scheduleJob('HourlyExecution', recurrenceRuleHourly, ()=>{ collectHourlyStats()});
 
             let recurrenceRuleDaily:schedule.RecurrenceRule = new schedule.RecurrenceRule()
-            recurrenceRuleDaily.hour= 0;
-            recurrenceRuleDaily.minute = 6;
+            recurrenceRuleDaily.hour= 22;
+            recurrenceRuleDaily.minute = 9;
             schedule.scheduleJob('DailyExecution', recurrenceRuleDaily, ()=>{ collectDailyStats()});
         }
     } catch(err) {
