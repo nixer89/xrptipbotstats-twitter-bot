@@ -16,13 +16,13 @@ export class StatsApi {
     async getNumberOfXRPSent(from:Date, to:Date): Promise<number> {
         let apiResponse = await this.callAggregateApi("/xrp?type=tip",from, to);
         //console.log(apiResponse);
-        return apiResponse.xrp;
+        return (apiResponse.xrp*config.XRP_DROPS)/config.XRP_DROPS;
     }
 
     async getXRPDepositsILP(from:Date, to:Date): Promise<number> {
         let apiResponse = await this.callAggregateILPApi("/xrp?type=ILP deposit",from, to);
         //console.log(apiResponse);
-        return apiResponse.amount/1000000;
+        return apiResponse.amount/config.XRP_DROPS;
     }
 
     async getHighestDeposit(from:Date, to:Date): Promise<any> {

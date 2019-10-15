@@ -1,3 +1,5 @@
+//general
+export const XRP_DROPS = 1000000;
 //tipbot feed api
 export const TIPBOT_FEED_API = process.env.TIPBOT_FEED_API || 'https://api.xrptipbot-stats.com/std-feed'
 export const TIPBOT_ILP_API = process.env.TIPBOT_ILP_API || 'https://api.xrptipbot-stats.com/ilp-feed'

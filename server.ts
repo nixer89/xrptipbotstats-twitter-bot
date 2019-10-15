@@ -29,12 +29,12 @@ async function initBot() {
         else {
             let recurrenceRuleHourly:schedule.RecurrenceRule = new schedule.RecurrenceRule()
             recurrenceRuleHourly.minute = 5;
-            schedule.scheduleJob('HourlyExecution', recurrenceRuleHourly, ()=>{ collectHourlyStats()});
+            schedule.scheduleJob('HourlyExecution', recurrenceRuleHourly, () => { collectHourlyStats() });
 
             let recurrenceRuleDaily:schedule.RecurrenceRule = new schedule.RecurrenceRule()
-            recurrenceRuleDaily.hour= 22;
+            recurrenceRuleDaily.hour= 0;
             recurrenceRuleDaily.minute = 6;
-            schedule.scheduleJob('DailyExecution', recurrenceRuleDaily, ()=>{ collectDailyStats()});
+            schedule.scheduleJob('DailyExecution', recurrenceRuleDaily, () => { collectDailyStats() });
         }
     } catch(err) {
         this.writeToConsole(JSON.stringify(err));
@@ -70,10 +70,10 @@ async function generateOverallTweet(timeframe:string, from_date: Date, to_date: 
 
     let overallTweet = "Overall @xrptipbot stats for the last "+timeframe+":\n\n";
     overallTweet+= "# of tips: " + numberOfTips + "\n";
-    overallTweet+= amountOfXRPsent+" #XRP has been sent across.\n";
+    overallTweet+= amountOfXRPsent+" #XRP has been sent.\n";
     overallTweet+= "ILP deposits: " + ilpDepositsXRP + " $XRP.\n"
     overallTweet+= (highestDeposit ? "Highest deposit: " + highestDeposit.xrp + " $XRP.\n":"");
-    overallTweet+= (highestWithdraw ? "Highest eithdraw: " + highestWithdraw.xrp + " $XRP.":"");
+    overallTweet+= (highestWithdraw ? "Highest withdraw: " + highestWithdraw.xrp + " $XRP.":"");
     overallTweet+= util.getLinkTextOverall(from_date,to_date);
 
     console.log(overallTweet)
@@ -81,7 +81,7 @@ async function generateOverallTweet(timeframe:string, from_date: Date, to_date: 
 }
 
 async function generateTopUserTweet(timeframe:string, from_date:Date, to_date:Date): Promise<any> {
-    let topStatsTweet:string = "@xrptipbot stats for the last "+timeframe+":\n\n";
+    let topStatsTweet:string = ".@xrptipbot user stats for the last "+timeframe+":\n\n";
 
     switch(util.getRandomInt(4)) {
         case 0: {
@@ -92,7 +92,7 @@ async function generateTopUserTweet(timeframe:string, from_date:Date, to_date:Da
         }
         case 1: {
             let mostReceivedXRP = await statsApi.getMostReceivedXRP(from_date, to_date);
-            topStatsTweet+= util.getUserNameNetwork(mostReceivedXRP[0]) + " received the most #XRP in the last "+timeframe+": " + mostReceivedXRP[0].xrp +" $XRP.";
+            topStatsTweet+= util.getUserNameNetwork(mostReceivedXRP[0]) + " received the most #XRP in the last "+timeframe+": " + (mostReceivedXRP[0].xrp*config.XRP_DROPS)/config.XRP_DROPS +" $XRP.";
             topStatsTweet+= util.getLinkTextUser(mostReceivedXRP[0],from_date, to_date);
             break;
         }
@@ -104,7 +104,7 @@ async function generateTopUserTweet(timeframe:string, from_date:Date, to_date:Da
         }
         case 3: {
             let mostSentXRP = await statsApi.getMostSentXRP(from_date, to_date);
-            topStatsTweet+= util.getUserNameNetwork(mostSentXRP[0]) + " sent the most #XRP in the last "+timeframe+": " + mostSentXRP[0].xrp +" $XRP.";
+            topStatsTweet+= util.getUserNameNetwork(mostSentXRP[0]) + " sent the most #XRP in the last "+timeframe+": " + (mostSentXRP[0].xrp*config.XRP_DROPS)/config.XRP_DROPS +" $XRP.";
             topStatsTweet+= util.getLinkTextUser(mostSentXRP[0],from_date, to_date);
             break;
         }
