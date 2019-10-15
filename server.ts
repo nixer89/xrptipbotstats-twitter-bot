@@ -27,8 +27,6 @@ async function initBot() {
         }
         //everything is ok. start the scheduling!
         else {
-            collect6hStats();
-            collectDailyStats();
             schedule.scheduleJob('Every6hExecution',{hour: 0, minute: 5}, () => { collect6hStats() });
             schedule.scheduleJob('Every6hExecution', {hour: 6, minute: 5}, () => { collect6hStats() });
             schedule.scheduleJob('Every6hExecution', {hour: 12, minute: 5}, () => { collect6hStats() });
