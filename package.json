@@ -1,6 +1,6 @@
 {
   "name": "xrptipbotstats-twitter-bot",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "xrptipbotstats-twitter-bot to tweet about the latest stats",
   "main": "server.ts",
   "scripts": {

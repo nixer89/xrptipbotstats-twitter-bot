@@ -86,7 +86,7 @@ async function generateTopUserTweet(timeframe:string, from_date:Date, to_date:Da
     switch(util.getRandomInt(4)) {
         case 0: {
             let mostReceivedTips = await statsApi.getMostReceivedTips(from_date, to_date);
-            topStatsTweet+= util.getUserNameNetwork(mostReceivedTips[0]) + " received the most tips in the last"+timeframe+": " + mostReceivedTips[0].count +" tips.";
+            topStatsTweet+= util.getUserNameNetwork(mostReceivedTips[0]) + " received the most tips in the last "+timeframe+": " + mostReceivedTips[0].count +" tips.";
             topStatsTweet+= util.getLinkTextUser(mostReceivedTips[0],from_date, to_date);
             break;
         }
