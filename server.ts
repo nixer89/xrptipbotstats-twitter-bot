@@ -27,28 +27,26 @@ async function initBot() {
         }
         //everything is ok. start the scheduling!
         else {
-            let recurrenceRuleHourly:schedule.RecurrenceRule = new schedule.RecurrenceRule()
-            recurrenceRuleHourly.minute = 5;
-            schedule.scheduleJob('HourlyExecution', recurrenceRuleHourly, () => { collectHourlyStats() });
+            schedule.scheduleJob('Every6hExecution',{hour: 0, minute: 5}, () => { collect6hStats() });
+            schedule.scheduleJob('Every6hExecution', {hour: 6, minute: 5}, () => { collect6hStats() });
+            schedule.scheduleJob('Every6hExecution', {hour: 12, minute: 5}, () => { collect6hStats() });
+            schedule.scheduleJob('Every6hExecution', {hour: 18, minute: 5}, () => { collect6hStats() });
 
-            let recurrenceRuleDaily:schedule.RecurrenceRule = new schedule.RecurrenceRule()
-            recurrenceRuleDaily.hour= 0;
-            recurrenceRuleDaily.minute = 6;
-            schedule.scheduleJob('DailyExecution', recurrenceRuleDaily, () => { collectDailyStats() });
+            schedule.scheduleJob('DailyExecution', {hour: 0, minute: 6}, () => { collectDailyStats() });
         }
     } catch(err) {
         this.writeToConsole(JSON.stringify(err));
     }
 }
 
-async function collectHourlyStats() {
+async function collect6hStats() {
     let to_date = util.setZeroMinutes(new Date());
     let from_date = util.setZeroMinutes(new Date());
-    from_date.setHours(from_date.getHours()-1);
+    from_date.setHours(from_date.getHours()-6);
 
-    await generateOverallTweet("hour",from_date, to_date);
+    await generateOverallTweet("6h",from_date, to_date);
 
-    await generateTopUserTweet("hour",from_date, to_date);
+    await generateTopUserTweet("6h",from_date, to_date);
 }
 
 async function collectDailyStats() {
@@ -77,7 +75,7 @@ async function generateOverallTweet(timeframe:string, from_date: Date, to_date: 
     overallTweet+= util.getLinkTextOverall(from_date,to_date);
 
     console.log(overallTweet)
-    twitterAPI.sendTweet(overallTweet);
+    //twitterAPI.sendTweet(overallTweet);
 }
 
 async function generateTopUserTweet(timeframe:string, from_date:Date, to_date:Date): Promise<any> {
@@ -111,7 +109,7 @@ async function generateTopUserTweet(timeframe:string, from_date:Date, to_date:Da
     }
 
     console.log(topStatsTweet)
-    twitterAPI.sendTweet(topStatsTweet);
+    //twitterAPI.sendTweet(topStatsTweet);
 }
 
 async function initTwitterAndTipbot(): Promise<boolean> {
