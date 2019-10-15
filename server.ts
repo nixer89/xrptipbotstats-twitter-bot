@@ -27,6 +27,8 @@ async function initBot() {
         }
         //everything is ok. start the scheduling!
         else {
+            collect6hStats();
+            collectDailyStats();
             schedule.scheduleJob('Every6hExecution',{hour: 0, minute: 5}, () => { collect6hStats() });
             schedule.scheduleJob('Every6hExecution', {hour: 6, minute: 5}, () => { collect6hStats() });
             schedule.scheduleJob('Every6hExecution', {hour: 12, minute: 5}, () => { collect6hStats() });
@@ -75,7 +77,7 @@ async function generateOverallTweet(timeframe:string, from_date: Date, to_date: 
     overallTweet+= util.getLinkTextOverall(from_date,to_date);
 
     console.log(overallTweet)
-    //twitterAPI.sendTweet(overallTweet);
+    twitterAPI.sendTweet(overallTweet);
 }
 
 async function generateTopUserTweet(timeframe:string, from_date:Date, to_date:Date): Promise<any> {
@@ -109,7 +111,7 @@ async function generateTopUserTweet(timeframe:string, from_date:Date, to_date:Da
     }
 
     console.log(topStatsTweet)
-    //twitterAPI.sendTweet(topStatsTweet);
+    twitterAPI.sendTweet(topStatsTweet);
 }
 
 async function initTwitterAndTipbot(): Promise<boolean> {
