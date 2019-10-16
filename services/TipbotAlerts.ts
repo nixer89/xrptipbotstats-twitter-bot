@@ -37,11 +37,9 @@ export class TipbotAlertsService {
         });
 
         mqttClient.on('message', async (topic, message) => {
+            //new tip came in, start processing and checking.
             let newTip = JSON.parse(message.toString());
-            //new tip came in, pushing to queue
-            this.writeToConsole("");
-            this.writeToConsole("received a new transaction. Doing the checks: " + newTip.type + " - " + newTip.xrp + " XRP.")
-            this.writeToConsole("");
+
             try {
                 if(newTip.type === 'tip' && newTip.xrp >= 400)
                     this.generateAlertMessageTip(newTip.xrp);
