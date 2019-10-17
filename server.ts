@@ -1,6 +1,7 @@
 import * as schedule from 'node-schedule';
 import * as RecurringStats from './services/RecurringStats';
 import * as TipbotAlerts from './services/TipbotAlerts';
+import * as RandomStats from './services/RandomStats';
 import * as Twitter from './api/twitterApi';
 import * as config from './config/config';
 import * as util from './util';
@@ -11,6 +12,7 @@ consoleStamp(console, { pattern: 'yyyy-mm-dd HH:MM:ss' });
 let twitterAPI:Twitter.TwitterApi;
 let stat_service: RecurringStats.RecurringStatsService;
 let tipbot_alerts: TipbotAlerts.TipbotAlertsService;
+let random_stats_service: RandomStats.RandomStatsService;
 
 initBot();
 
@@ -29,20 +31,23 @@ async function initBot() {
         }
         //everything is ok. start the scheduling!
         else {
+            random_stats_service = new RandomStats.RandomStatsService(twitterAPI);
+            stat_service = new RecurringStats.RecurringStatsService(twitterAPI)
             tipbot_alerts = new TipbotAlerts.TipbotAlertsService(twitterAPI);
+            
             tipbot_alerts.initMQTT();
 
-            stat_service = new RecurringStats.RecurringStatsService(twitterAPI)
+            schedule.scheduleJob('DailyExecution', {hour: 0, minute: 5}, () => { stat_service.collectDailyStats() });
 
-            schedule.scheduleJob('Every6hExecution',{hour: 0, minute: 5}, () => { stat_service.collect6hStats() });
-            schedule.scheduleJob('Every6hExecution', {hour: 6, minute: 5}, () => { stat_service.collect6hStats() });
-            schedule.scheduleJob('Every6hExecution', {hour: 12, minute: 5}, () => { stat_service.collect6hStats() });
-            schedule.scheduleJob('Every6hExecution', {hour: 18, minute: 5}, () => { stat_service.collect6hStats() });
+            schedule.scheduleJob('Every4hExecution', {hour: 4, minute: 5}, () => { random_stats_service.collectRandomStats() });
+            schedule.scheduleJob('Every4hExecution', {hour: 8, minute: 5}, () => { random_stats_service.collectRandomStats() });
+            schedule.scheduleJob('Every4hExecution', {hour: 12, minute: 5}, () => { random_stats_service.collectRandomStats() });
+            schedule.scheduleJob('Every4hExecution', {hour: 16, minute: 5}, () => { random_stats_service.collectRandomStats() });
+            schedule.scheduleJob('Every4hExecution', {hour: 20, minute: 5}, () => { random_stats_service.collectRandomStats() });
 
-            schedule.scheduleJob('DailyExecution', {hour: 0, minute: 6}, () => { stat_service.collectDailyStats() });
         }
     } catch(err) {
-        this.writeToConsole(JSON.stringify(err));
+        writeToConsole(JSON.stringify(err));
     }
 }
 

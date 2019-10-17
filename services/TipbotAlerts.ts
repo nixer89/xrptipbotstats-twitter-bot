@@ -45,7 +45,7 @@ export class TipbotAlertsService {
                     this.generateAlertMessageTip(newTip.xrp);
                 else if(newTip.type === 'deposit' && newTip.xrp >= 1000)
                     this.generateAlertMessageDeposit(newTip.xrp);
-                else if(newTip.type === 'withdraw' && newTip.xrp >= 1000)
+                else if(newTip.type === 'withdraw' && newTip.xrp >= 800)
                     this.generateAlertMessageWithdraw(newTip.xrp);
             } catch(err) {
                 this.writeToConsole(JSON.stringify(err));
@@ -60,15 +60,15 @@ export class TipbotAlertsService {
     }
 
     generateAlertMessageDeposit(xrp: number): void {
-        this.writeToConsole("📢 @xrptipbot 'whale alert' 📢 😄\n\nSomeone has just deposited " + xrp + " $XRP into his @xrptipbot account! 🎉\n\n#XRPCommunity #XRPTipBot #XRP")
+        this.writeToConsole("📢 @xrptipbot 'whale alert' 📢 😄\n\nSomeone has just deposited " + xrp + " $XRP into their @xrptipbot account! 🎉\n\n#XRPCommunity #XRPTipBot #XRP")
 
-        this.twitterAPI.sendTweet("📢 @xrptipbot 'whale alert' 📢 😄\n\nSomeone has just deposited " + xrp + " $XRP into his @xrptipbot account! 🎉\n\n#XRPCommunity #XRPTipBot #XRP")
+        this.twitterAPI.sendTweet("📢 @xrptipbot 'whale alert' 📢 😄\n\nSomeone has just deposited " + xrp + " $XRP into their @xrptipbot account! 🎉\n\n#XRPCommunity #XRPTipBot #XRP")
     }
 
     generateAlertMessageWithdraw(xrp: number): void {
-        this.writeToConsole("📢 @xrptipbot 'whale alert' 📢 😄\n\nSomeone has just withdrawn " + xrp + " $XRP from his @xrptipbot account! 🎉\n\n#XRPCommunity #XRPTipBot #XRP");
+        this.writeToConsole("📢 @xrptipbot 'whale alert' 📢 😄\n\nSomeone has just withdrawn " + xrp + " $XRP from their @xrptipbot account! 🎉\n\n#XRPCommunity #XRPTipBot #XRP");
 
-        this.twitterAPI.sendTweet("📢 @xrptipbot 'whale alert' 📢 😄\n\nSomeone has just withdrawn " + xrp + " $XRP from his @xrptipbot account! 🎉\n\n#XRPCommunity #XRPTipBot #XRP")
+        this.twitterAPI.sendTweet("📢 @xrptipbot 'whale alert' 📢 😄\n\nSomeone has just withdrawn " + xrp + " $XRP from their @xrptipbot account! 🎉\n\n#XRPCommunity #XRPTipBot #XRP")
     }
 
     writeToConsole(message:string) {

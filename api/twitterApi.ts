@@ -31,6 +31,7 @@ export class TwitterApi {
 
     async sendTweet(message:string) {
         try {
+            console.log(message);
             await this.twitterClient.post('statuses/update', {status:message});
         } catch(err) {
             this.writeToConsole(JSON.stringify(err));
