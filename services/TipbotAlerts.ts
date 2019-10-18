@@ -45,7 +45,7 @@ export class TipbotAlertsService {
                     this.generateAlertMessageTip(newTip.xrp);
                 else if(newTip.type === 'deposit' && newTip.xrp >= 1000)
                     this.generateAlertMessageDeposit(newTip.xrp);
-                else if(newTip.type === 'withdraw' && newTip.xrp >= 800)
+                else if(newTip.type === 'withdraw' && newTip.xrp >= 900)
                     this.generateAlertMessageWithdraw(newTip.xrp);
             } catch(err) {
                 this.writeToConsole(JSON.stringify(err));
