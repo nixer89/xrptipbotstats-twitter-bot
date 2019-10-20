@@ -49,9 +49,9 @@ export class RecurringStatsService {
         let overallTweet = "Overall @xrptipbot stats for the last "+timeframe+":\n\n";
         overallTweet+= "# of tips: " + numberOfTips + "\n";
         overallTweet+= amountOfXRPsent+" #XRP has been sent.\n";
-        overallTweet+= "ILP deposits: " + ilpDepositsXRP + " $XRP.\n";
         overallTweet+= "Deposits: " + amountDeposited + " $XRP.\n";
-        overallTweet+= "Withdrawals: " + amountWithdrawn + " $XRP.";
+        overallTweet+= "Withdrawals: " + amountWithdrawn + " $XRP.\n";
+        overallTweet+= "ILP deposits: " + ilpDepositsXRP + " $XRP.";
         overallTweet+= util.getLinkTextOverall(from_date,to_date);
     
         this.twitterAPI.sendTweet(overallTweet);
@@ -73,7 +73,7 @@ export class RecurringStatsService {
             case 6:
             case 9: {
                 let mostReceivedXRP = await statsApi.getMostReceivedXRP(from_date, to_date);
-                topStatsTweet+= util.getUserNameNetwork(mostReceivedXRP[0]) + " received the most #XRP in the last "+timeframe+": " + (mostReceivedXRP[0].xrp*config.XRP_DROPS)/config.XRP_DROPS +" $XRP.";
+                topStatsTweet+= util.getUserNameNetwork(mostReceivedXRP[0]) + " received the most #XRP via tip in the last "+timeframe+": " + (mostReceivedXRP[0].xrp*config.XRP_DROPS)/config.XRP_DROPS +" $XRP.";
                 topStatsTweet+= util.getLinkTextUser(mostReceivedXRP[0],from_date, to_date);
                 break;
             }
@@ -89,7 +89,7 @@ export class RecurringStatsService {
             case 4:
             case 11: {
                 let mostSentXRP = await statsApi.getMostSentXRP(from_date, to_date);
-                topStatsTweet+= util.getUserNameNetwork(mostSentXRP[0]) + " sent the most #XRP in the last "+timeframe+": " + (mostSentXRP[0].xrp*config.XRP_DROPS)/config.XRP_DROPS +" $XRP.";
+                topStatsTweet+= util.getUserNameNetwork(mostSentXRP[0]) + " sent the most #XRP via tip in the last "+timeframe+": " + (mostSentXRP[0].xrp*config.XRP_DROPS)/config.XRP_DROPS +" $XRP.";
                 topStatsTweet+= util.getLinkTextUser(mostSentXRP[0],from_date, to_date);
                 break;
             }

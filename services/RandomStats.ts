@@ -39,7 +39,7 @@ export class RandomStatsService {
 
         //always choose another randon number (not previous one!)
         do {
-            randomNumber = util.getRandomInt(17)
+            randomNumber = util.getRandomInt(20)
         } while(this.lastRandomNumberStats == randomNumber)
         
         
@@ -285,6 +285,54 @@ export class RandomStatsService {
                     this.generateRandomStatsTweet(from_date, to_date);
                 break; 
             }
+            //get tipbot user count
+            case 17: {
+                let uniqueUsersTipSent = await statsApi.callDistinctApi("user", "?type=tip");
+                let uniqueUsersTipReceived = await statsApi.callDistinctApi("to", "?type=tip");
+
+                let uniqueUsersTipDeposit = await statsApi.callDistinctApi("user", "?type=deposit");
+                let uniqueUsersTipWithdrawal = await statsApi.callDistinctApi("user", "?type=withdraw");
+
+                statsText = uniqueUsersTipSent + " unique users have sent a tip since the @xrptipbot creation in November 2017!"
+                statsText+= "\nIn the same time, a whopping number of " + uniqueUsersTipReceived + " unique users have received a tip! 🎉";
+                statsText+= "\n\n" + uniqueUsersTipDeposit + " have deposited."
+                statsText+= "\n" + uniqueUsersTipWithdrawal + " have withdrawn."
+
+                break;
+            }
+            //get tipbot user count
+            case 18: {
+                let uniqueUsersTipSentTwitter = await statsApi.callDistinctApi("user", "?type=tip&user_network=twitter");
+                let uniqueUsersTipSentDiscord = await statsApi.callDistinctApi("user", "?type=tip&user_network=discord");
+                let uniqueUsersTipSentReddit = await statsApi.callDistinctApi("user", "?type=tip&user_network=reddit");
+                let uniqueUsersTipSentCoil = await statsApi.callDistinctApi("user", "?type=tip&user_network=coil");
+                let uniqueUsersTipSentPaper = await statsApi.callDistinctApi("user", "?type=tip&user_network=internal");
+
+                statsText = "Overall active user count (by network):";
+                statsText+= "\n('Active' means at least: sent a tip or deposited or withdrawn)";
+                statsText+= "\n\nTwitter: " + uniqueUsersTipSentTwitter;
+                statsText+= "\nReddit: " + uniqueUsersTipSentReddit;
+                statsText+= "\nDiscord: " + uniqueUsersTipSentDiscord;
+                statsText+= "\nCoil: " + uniqueUsersTipSentCoil;
+                statsText+= "\nPaperAccount: " + uniqueUsersTipSentPaper;
+                break;
+            }
+            case 19: {
+                let uniqueUsersTipSentTwitter = await statsApi.callDistinctApi("user", "?type=tip&user_network=twitter", from_date, to_date);
+                let uniqueUsersTipSentDiscord = await statsApi.callDistinctApi("user", "?type=tip&user_network=discord", from_date, to_date);
+                let uniqueUsersTipSentReddit = await statsApi.callDistinctApi("user", "?type=tip&user_network=reddit", from_date, to_date);
+                let uniqueUsersTipSentCoil = await statsApi.callDistinctApi("user", "?type=tip&user_network=coil", from_date, to_date);
+                let uniqueUsersTipSentPaper = await statsApi.callDistinctApi("user", "?type=tip&user_network=internal", from_date, to_date);
+
+                statsText = "Active user count in the last " + this.timeframe+" :";
+                statsText+= "\n('Active' means at least: sent a tip or deposited or withdrawn)";
+                statsText+= "\n\nTwitter: " + uniqueUsersTipSentTwitter;
+                statsText+= "\nReddit: " + uniqueUsersTipSentReddit;
+                statsText+= "\nDiscord: " + uniqueUsersTipSentDiscord;
+                statsText+= "\nCoil: " + uniqueUsersTipSentCoil;
+                statsText+= "\nPaperAccount: " + uniqueUsersTipSentPaper;
+                break;
+            }
             default: {
                 let allTips = await statsApi.callCountApi("?type=tip", from_date, to_date); 
                 let appTips = await statsApi.callCountApi("?type=tip&network=app", from_date, to_date);
@@ -315,47 +363,47 @@ export class RandomStatsService {
         switch(randomNumber) {
             case 0: {
                 date.setHours(date.getHours()-1);
-                this.timeframe = "1h";
+                this.timeframe = "⏲️  1h ⏲️ ";
                 break;
             }
             case 1: {
                 date.setHours(date.getHours()-4);
-                this.timeframe = "4h";
+                this.timeframe = "⏲️  4h ⏲️ ";
                 break;
             }
             case 2: {
                 date.setHours(date.getHours()-12);
-                this.timeframe = "12h";
+                this.timeframe = "⏲️  12h ⏲️ ";
                 break;
             }
             case 3: {
                 date.setHours(date.getHours()-24);
-                this.timeframe = "24h";
+                this.timeframe = "⏲️  24h ⏲️ ";
                 break;
             }
             case 4: {
-                date.setDate(date.getDate()-7);
-                this.timeframe = "week";
+                date.setDate(date.getDate()-7); 
+                this.timeframe = "⏲️  WEEK ⏲️ ";
                 break;
             }
             case 5: {
                 date.setMonth(date.getMonth()-1);
-                this.timeframe = "month";
+                this.timeframe = "⏲️  MONTH ⏲️ ";
                 break;
             }
             case 6: {
                 date.setMonth(date.getMonth()-6);
-                this.timeframe = "6 months";
+                this.timeframe = "⏲️  6 MONTHS ⏲️ ";
                 break;
             }
             case 7: {
                 date.setFullYear(date.getFullYear()-1);
-                this.timeframe = "year";
+                this.timeframe = "⏲️  YEAR ⏲️ ";
                 break;
             }
             default: {
                 date.setHours(date.getHours()-4);
-                this.timeframe = "4h";
+                this.timeframe = "⏲️  4H⏲️ ";
                 break;
             }
         }

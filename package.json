@@ -1,6 +1,6 @@
 {
   "name": "xrptipbotstats-twitter-bot",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "xrptipbotstats-twitter-bot to tweet about the latest stats",
   "main": "server.ts",
   "scripts": {
@@ -35,6 +35,6 @@
     "@types/node-schedule": "^1.2.4",
     "@types/twit": "^2.2.22",
     "concurrently": "^4.1.2",
-    "nodemon": "^1.19.2"
+    "nodemon": "^1.19.4"
   }
 }
