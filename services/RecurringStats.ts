@@ -8,6 +8,26 @@ let statsApi:Stats.StatsApi = new Stats.StatsApi();
 export class RecurringStatsService {
 
     constructor(private twitterAPI: Twitter.TwitterApi) {}
+
+    async collectMonthlyStats() {
+        let to_date = util.setZeroMinutes(new Date());
+        let from_date = util.setZeroMinutes(new Date());
+        from_date.setMonth(from_date.getMonth()-1);
+    
+        await this.generateOverallTweet("month",from_date, to_date);
+    
+        await this.generateTopUserTweet("month",from_date, to_date);
+    }
+
+    async collectWeeklyStats() {
+        let to_date = util.setZeroMinutes(new Date());
+        let from_date = util.setZeroMinutes(new Date());
+        from_date.setDate(from_date.getDate()-7);
+    
+        await this.generateOverallTweet("week",from_date, to_date);
+    
+        await this.generateTopUserTweet("week",from_date, to_date);
+    }
     
     async collectDailyStats() {
         let to_date = util.setZeroMinutes(new Date());
