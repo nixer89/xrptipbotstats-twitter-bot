@@ -39,7 +39,7 @@ export class RandomStatsService {
 
         //always choose another randon number (not previous one!)
         do {
-            randomNumber = util.getRandomInt(20)
+            randomNumber = util.getRandomInt(22)
         } while(this.lastRandomNumberStats == randomNumber)
         
         
@@ -148,7 +148,7 @@ export class RandomStatsService {
                 let mostReceivedTips = await statsApi.getMostReceivedTips(from_date, to_date);
                 if(mostReceivedTips && mostReceivedTips[0]) {
                     statsText = util.getUserNameNetwork(mostReceivedTips[0]) + " received the most tips in the last "+this.timeframe+": " + mostReceivedTips[0].count +" tips.";
-                    statsText+= util.getLinkTextUser(mostReceivedTips[0],from_date, to_date);
+                    statsText+= util.getLinkTextUser(mostReceivedTips[0],from_date, to_date, false);
                 } else
                     this.generateRandomStatsTweet(from_date, to_date);
                 break;
@@ -158,7 +158,7 @@ export class RandomStatsService {
                 let mostReceivedXRP = await statsApi.getMostReceivedXRP(from_date, to_date);
                 if(mostReceivedXRP && mostReceivedXRP[0]) {
                     statsText = util.getUserNameNetwork(mostReceivedXRP[0]) + " received the most #XRP in the last "+this.timeframe+": " + (mostReceivedXRP[0].xrp*config.XRP_DROPS)/config.XRP_DROPS +" $XRP.";
-                    statsText+= util.getLinkTextUser(mostReceivedXRP[0],from_date, to_date);
+                    statsText+= util.getLinkTextUser(mostReceivedXRP[0],from_date, to_date, false);
                 } else
                     this.generateRandomStatsTweet(from_date, to_date);
                 break;
@@ -168,7 +168,7 @@ export class RandomStatsService {
                 let mostSentTips = await statsApi.callCountApiMostReceived("?type=tip&limit=1", from_date, to_date);
                 if(mostSentTips && mostSentTips[0]) {
                     statsText = util.getUserNameNetwork(mostSentTips[0]) + " sent the most tips in the last "+this.timeframe+": " + mostSentTips[0].count +" tips.";
-                    statsText+= util.getLinkTextUser(mostSentTips[0],from_date, to_date);
+                    statsText+= util.getLinkTextUser(mostSentTips[0],from_date, to_date, false);
                 } else
                     this.generateRandomStatsTweet(from_date, to_date);
                 break;
@@ -178,7 +178,7 @@ export class RandomStatsService {
                 let mostSentXRP = await statsApi.getMostSentXRP(from_date, to_date);
                 if(mostSentXRP) {
                     statsText= util.getUserNameNetwork(mostSentXRP[0]) + " sent the most #XRP in the last "+this.timeframe+": " + (mostSentXRP[0].xrp*config.XRP_DROPS)/config.XRP_DROPS +" $XRP.";
-                    statsText+= util.getLinkTextUser(mostSentXRP[0],from_date, to_date);
+                    statsText+= util.getLinkTextUser(mostSentXRP[0],from_date, to_date, false);
                 } else
                     this.generateRandomStatsTweet(from_date, to_date);
                 break;
@@ -285,7 +285,7 @@ export class RandomStatsService {
                     this.generateRandomStatsTweet(from_date, to_date);
                 break; 
             }
-            //get tipbot user count
+            //get tipbot user count (tips only)
             case 17: {
                 let uniqueUsersTipSent = await statsApi.callDistinctApi("user", "?type=tip");
                 let uniqueUsersTipReceived = await statsApi.callDistinctApi("to", "?type=tip");
@@ -300,13 +300,13 @@ export class RandomStatsService {
 
                 break;
             }
-            //get tipbot user count
+            //get tipbot user count overall (tips, deposits, withdrawals)
             case 18: {
-                let uniqueUsersTipSentTwitter = await statsApi.callDistinctApi("user", "?type=tip&user_network=twitter");
-                let uniqueUsersTipSentDiscord = await statsApi.callDistinctApi("user", "?type=tip&user_network=discord");
-                let uniqueUsersTipSentReddit = await statsApi.callDistinctApi("user", "?type=tip&user_network=reddit");
-                let uniqueUsersTipSentCoil = await statsApi.callDistinctApi("user", "?type=tip&user_network=coil");
-                let uniqueUsersTipSentPaper = await statsApi.callDistinctApi("user", "?type=tip&user_network=internal");
+                let uniqueUsersTipSentTwitter = await statsApi.callDistinctApi("user", "?user_network=twitter");
+                let uniqueUsersTipSentDiscord = await statsApi.callDistinctApi("user", "?user_network=discord");
+                let uniqueUsersTipSentReddit = await statsApi.callDistinctApi("user", "?user_network=reddit");
+                let uniqueUsersTipSentCoil = await statsApi.callDistinctApi("user", "?user_network=coil");
+                let uniqueUsersTipSentPaper = await statsApi.callDistinctApi("user", "?user_network=internal");
 
                 statsText = "Overall active user count (by network):";
                 statsText+= "\n('Active' means at least: sent a tip or deposited or withdrawn)";
@@ -317,12 +317,13 @@ export class RandomStatsService {
                 statsText+= "\nPaperAccount: " + uniqueUsersTipSentPaper;
                 break;
             }
+            //get tipbot user count for timeframe (tips, deposits, withdrawals)
             case 19: {
-                let uniqueUsersTipSentTwitter = await statsApi.callDistinctApi("user", "?type=tip&user_network=twitter", from_date, to_date);
-                let uniqueUsersTipSentDiscord = await statsApi.callDistinctApi("user", "?type=tip&user_network=discord", from_date, to_date);
-                let uniqueUsersTipSentReddit = await statsApi.callDistinctApi("user", "?type=tip&user_network=reddit", from_date, to_date);
-                let uniqueUsersTipSentCoil = await statsApi.callDistinctApi("user", "?type=tip&user_network=coil", from_date, to_date);
-                let uniqueUsersTipSentPaper = await statsApi.callDistinctApi("user", "?type=tip&user_network=internal", from_date, to_date);
+                let uniqueUsersTipSentTwitter = await statsApi.callDistinctApi("user", "?user_network=twitter", from_date, to_date);
+                let uniqueUsersTipSentDiscord = await statsApi.callDistinctApi("user", "?user_network=discord", from_date, to_date);
+                let uniqueUsersTipSentReddit = await statsApi.callDistinctApi("user", "?user_network=reddit", from_date, to_date);
+                let uniqueUsersTipSentCoil = await statsApi.callDistinctApi("user", "?user_network=coil", from_date, to_date);
+                let uniqueUsersTipSentPaper = await statsApi.callDistinctApi("user", "?user_network=internal", from_date, to_date);
 
                 statsText = "Active user count in the last " + this.timeframe+" :";
                 statsText+= "\n('Active' means at least: sent a tip or deposited or withdrawn)";
@@ -331,6 +332,40 @@ export class RandomStatsService {
                 statsText+= "\nDiscord: " + uniqueUsersTipSentDiscord;
                 statsText+= "\nCoil: " + uniqueUsersTipSentCoil;
                 statsText+= "\nPaperAccount: " + uniqueUsersTipSentPaper;
+                break;
+            }
+            //get tipbot tip receiver count overall
+            case 20: {
+                let uniqueUsersTipReceivedTwitter = await statsApi.callDistinctApi("to", "?to_network=twitter");
+                let uniqueUsersTipReceivedDiscord = await statsApi.callDistinctApi("to", "?to_network=discord");
+                let uniqueUsersTipReceivedReddit = await statsApi.callDistinctApi("to", "?to_network=reddit");
+                let uniqueUsersTipReceivedCoil = await statsApi.callDistinctApi("to", "?to_network=coil");
+                let uniqueUsersTipReceivedPaper = await statsApi.callDistinctApi("to", "?to_network=internal");
+
+                statsText = "Overall tip receiver count (by network):";
+                statsText+= "\n(Unique users which received a tip)";
+                statsText+= "\n\nTwitter: " + uniqueUsersTipReceivedTwitter;
+                statsText+= "\nReddit: " + uniqueUsersTipReceivedDiscord;
+                statsText+= "\nDiscord: " + uniqueUsersTipReceivedReddit;
+                statsText+= "\nCoil: " + uniqueUsersTipReceivedCoil;
+                statsText+= "\nPaperAccount: " + uniqueUsersTipReceivedPaper;
+                break;
+            }
+            //get tipbot user count for timeframe (tips, deposits, withdrawals)
+            case 21: {
+                let uniqueUsersTipReceivedTwitter = await statsApi.callDistinctApi("to", "?to_network=twitter", from_date, to_date);
+                let uniqueUsersTipReceivedDiscord = await statsApi.callDistinctApi("to", "?to_network=discord", from_date, to_date);
+                let uniqueUsersTipReceivedReddit = await statsApi.callDistinctApi("to", "?to_network=reddit", from_date, to_date);
+                let uniqueUsersTipReceivedCoil = await statsApi.callDistinctApi("to", "?to_network=coil", from_date, to_date);
+                let uniqueUsersTipReceivedPaper = await statsApi.callDistinctApi("to", "?to_network=internal", from_date, to_date);
+
+                statsText = "Tip receiver count in the last " + this.timeframe+" :";
+                statsText+= "\n(Unique users which received a tip)";
+                statsText+= "\n\nTwitter: " + uniqueUsersTipReceivedTwitter;
+                statsText+= "\nReddit: " + uniqueUsersTipReceivedDiscord;
+                statsText+= "\nDiscord: " + uniqueUsersTipReceivedReddit;
+                statsText+= "\nCoil: " + uniqueUsersTipReceivedCoil;
+                statsText+= "\nPaperAccount: " + uniqueUsersTipReceivedPaper;
                 break;
             }
             default: {
@@ -360,53 +395,56 @@ export class RandomStatsService {
     }
 
     getPreviousPeriod(randomNumber:number, date:Date): Date {
+        this.timeframe = "⏱️ "
         switch(randomNumber) {
             case 0: {
                 date.setHours(date.getHours()-1);
-                this.timeframe = "⏲️  1h ⏲️ ";
+                this.timeframe += "1h";
                 break;
             }
             case 1: {
                 date.setHours(date.getHours()-4);
-                this.timeframe = "⏲️  4h ⏲️ ";
+                this.timeframe += "4h";
                 break;
             }
             case 2: {
                 date.setHours(date.getHours()-12);
-                this.timeframe = "⏲️  12h ⏲️ ";
+                this.timeframe += "12h";
                 break;
             }
             case 3: {
                 date.setHours(date.getHours()-24);
-                this.timeframe = "⏲️  24h ⏲️ ";
+                this.timeframe += "24h";
                 break;
             }
             case 4: {
                 date.setDate(date.getDate()-7); 
-                this.timeframe = "⏲️  WEEK ⏲️ ";
+                this.timeframe += "WEEK";
                 break;
             }
             case 5: {
                 date.setMonth(date.getMonth()-1);
-                this.timeframe = "⏲️  MONTH ⏲️ ";
+                this.timeframe += "MONTH";
                 break;
             }
             case 6: {
                 date.setMonth(date.getMonth()-6);
-                this.timeframe = "⏲️  6 MONTHS ⏲️ ";
+                this.timeframe += "6 MONTHS";
                 break;
             }
             case 7: {
                 date.setFullYear(date.getFullYear()-1);
-                this.timeframe = "⏲️  YEAR ⏲️ ";
+                this.timeframe += "YEAR";
                 break;
             }
             default: {
                 date.setHours(date.getHours()-4);
-                this.timeframe = "⏲️  4H⏲️ ";
+                this.timeframe += "4h";
                 break;
             }
         }
+
+        this.timeframe+= " ⏱️"
 
         return date;
     }

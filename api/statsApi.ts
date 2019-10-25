@@ -1,11 +1,15 @@
 import * as fetch from 'node-fetch';
 import * as util from '../util';
 import * as config from '../config/config';
+import * as HttpsProxyAgent from 'https-proxy-agent';
 
 import consoleStamp = require("console-stamp");
 consoleStamp(console, { pattern: 'yyyy-mm-dd HH:MM:ss' });
 
 export class StatsApi {
+
+    proxy = new HttpsProxyAgent("http://proxy:81");
+    useProxy = false;
 
     // ############################################## API Methods to use ##############################################
     async getNumberOfTips(from?:Date, to?:Date): Promise<number> {
@@ -132,7 +136,7 @@ export class StatsApi {
     async callApi(url: string) : Promise<any> {
         //console.log("calling: " + url);
         try {
-            let apiResponse = await fetch.default(url, { headers: {"Content-Type": "application/json"}, method: 'GET'});
+            let apiResponse = await fetch.default(url, { headers: {"Content-Type": "application/json"}, agent: this.useProxy ? this.proxy : null, method: 'GET'});
             if(apiResponse && apiResponse.ok) {
                 return apiResponse.json();
             } else {

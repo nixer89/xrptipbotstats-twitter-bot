@@ -44,10 +44,12 @@ export function getLinkTextOverall(from_date:Date, to_date:Date): string {
     return linkText;
 }
 
-export function getLinkTextUser(stats:any, from_date:Date, to_date:Date): string {
+export function getLinkTextUser(stats:any, from_date:Date, to_date:Date, withHasTag: boolean): string {
     let linkText = "\n\nFind more interesting stats of " +getUserNameNetwork(stats)+ " here:\n";
     linkText+= "https://xrptipbot-stats.com/userstatistics?user="+stats.userName+"&network="+stats['_id'].network+"&from_date="+from_date.toISOString()+"&to_date="+to_date.toISOString();
-    linkText+= "\n\n"+getRandomHashTag();
+
+    if(withHasTag)
+        linkText+= "\n\n"+getRandomHashTag();
 
     return linkText;
 }
