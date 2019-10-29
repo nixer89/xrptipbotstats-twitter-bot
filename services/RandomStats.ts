@@ -309,7 +309,7 @@ export class RandomStatsService {
                 let uniqueUsersTipSentPaper = await statsApi.callDistinctApi("user", "?user_network=internal");
 
                 statsText = "Overall active user count (by network):";
-                statsText+= "\n('Active' means at least: sent a tip or deposited or withdrawn)";
+                statsText+= "\n('Active' means at least: sent a tip or did deposit/withdrawal)";
                 statsText+= "\n\nTwitter: " + uniqueUsersTipSentTwitter;
                 statsText+= "\nReddit: " + uniqueUsersTipSentReddit;
                 statsText+= "\nDiscord: " + uniqueUsersTipSentDiscord;
@@ -326,7 +326,7 @@ export class RandomStatsService {
                 let uniqueUsersTipSentPaper = await statsApi.callDistinctApi("user", "?user_network=internal", from_date, to_date);
 
                 statsText = "Active user count in the last " + this.timeframe+" :";
-                statsText+= "\n('Active' means at least: sent a tip or deposited or withdrawn)";
+                statsText+= "\n('Active' means at least: sent a tip or did a deposit/withdrawal)";
                 statsText+= "\n\nTwitter: " + uniqueUsersTipSentTwitter;
                 statsText+= "\nReddit: " + uniqueUsersTipSentReddit;
                 statsText+= "\nDiscord: " + uniqueUsersTipSentDiscord;
@@ -334,16 +334,15 @@ export class RandomStatsService {
                 statsText+= "\nPaperAccount: " + uniqueUsersTipSentPaper;
                 break;
             }
-            //get tipbot tip receiver count overall
+            //Unique users which received a tip overall
             case 20: {
-                let uniqueUsersTipReceivedTwitter = await statsApi.callDistinctApi("to", "?to_network=twitter");
-                let uniqueUsersTipReceivedDiscord = await statsApi.callDistinctApi("to", "?to_network=discord");
-                let uniqueUsersTipReceivedReddit = await statsApi.callDistinctApi("to", "?to_network=reddit");
-                let uniqueUsersTipReceivedCoil = await statsApi.callDistinctApi("to", "?to_network=coil");
-                let uniqueUsersTipReceivedPaper = await statsApi.callDistinctApi("to", "?to_network=internal");
+                let uniqueUsersTipReceivedTwitter = await statsApi.callDistinctApi("to", "?type=tip&to_network=twitter");
+                let uniqueUsersTipReceivedDiscord = await statsApi.callDistinctApi("to", "?type=tip&to_network=discord");
+                let uniqueUsersTipReceivedReddit = await statsApi.callDistinctApi("to", "?type=tip&to_network=reddit");
+                let uniqueUsersTipReceivedCoil = await statsApi.callDistinctApi("to", "?type=tip&to_network=coil");
+                let uniqueUsersTipReceivedPaper = await statsApi.callDistinctApi("to", "?type=tip&to_network=internal");
 
-                statsText = "Overall tip receiver count (by network):";
-                statsText+= "\n(Unique users which received a tip)";
+                statsText = "Unique users which received a tip since the inception of the @xrptipbot (by network):";
                 statsText+= "\n\nTwitter: " + uniqueUsersTipReceivedTwitter;
                 statsText+= "\nReddit: " + uniqueUsersTipReceivedDiscord;
                 statsText+= "\nDiscord: " + uniqueUsersTipReceivedReddit;
@@ -351,16 +350,15 @@ export class RandomStatsService {
                 statsText+= "\nPaperAccount: " + uniqueUsersTipReceivedPaper;
                 break;
             }
-            //get tipbot user count for timeframe (tips, deposits, withdrawals)
+            //Unique users which received a tip for timeframe
             case 21: {
-                let uniqueUsersTipReceivedTwitter = await statsApi.callDistinctApi("to", "?to_network=twitter", from_date, to_date);
-                let uniqueUsersTipReceivedDiscord = await statsApi.callDistinctApi("to", "?to_network=discord", from_date, to_date);
-                let uniqueUsersTipReceivedReddit = await statsApi.callDistinctApi("to", "?to_network=reddit", from_date, to_date);
-                let uniqueUsersTipReceivedCoil = await statsApi.callDistinctApi("to", "?to_network=coil", from_date, to_date);
-                let uniqueUsersTipReceivedPaper = await statsApi.callDistinctApi("to", "?to_network=internal", from_date, to_date);
+                let uniqueUsersTipReceivedTwitter = await statsApi.callDistinctApi("to", "?type=tip&to_network=twitter", from_date, to_date);
+                let uniqueUsersTipReceivedDiscord = await statsApi.callDistinctApi("to", "?type=tip&to_network=discord", from_date, to_date);
+                let uniqueUsersTipReceivedReddit = await statsApi.callDistinctApi("to", "?type=tip&to_network=reddit", from_date, to_date);
+                let uniqueUsersTipReceivedCoil = await statsApi.callDistinctApi("to", "?type=tip&to_network=coil", from_date, to_date);
+                let uniqueUsersTipReceivedPaper = await statsApi.callDistinctApi("to", "?type=tip&to_network=internal", from_date, to_date);
 
-                statsText = "Tip receiver count in the last " + this.timeframe+" :";
-                statsText+= "\n(Unique users which received a tip)";
+                statsText = "Unique users which received a tip in the last " + this.timeframe+" :";
                 statsText+= "\n\nTwitter: " + uniqueUsersTipReceivedTwitter;
                 statsText+= "\nReddit: " + uniqueUsersTipReceivedDiscord;
                 statsText+= "\nDiscord: " + uniqueUsersTipReceivedReddit;
