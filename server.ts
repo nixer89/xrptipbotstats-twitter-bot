@@ -41,11 +41,9 @@ async function initBot() {
             schedule.scheduleJob('WeeklyExecution', {dayOfWeek: 1, hour: 0, minute: 5}, () => { stat_service.collectWeeklyStats() });
             schedule.scheduleJob('MonthlyExecution', {date: 1, hour: 0, minute: 5}, () => { stat_service.collectMonthlyStats() });
 
-            schedule.scheduleJob('Every4hExecution', {hour: 4, minute: 5}, () => { random_stats_service.collectRandomStats(8) });
-            schedule.scheduleJob('Every4hExecution', {hour: 8, minute: 5}, () => { random_stats_service.collectRandomStats(8) });
-            schedule.scheduleJob('Every4hExecution', {hour: 12, minute: 5}, () => { random_stats_service.collectRandomStats(8) });
-            schedule.scheduleJob('Every4hExecution', {hour: 16, minute: 5}, () => { random_stats_service.collectRandomStats(8) });
-            schedule.scheduleJob('Every4hExecution', {hour: 20, minute: 5}, () => { random_stats_service.collectRandomStats(8) });
+            schedule.scheduleJob('Every6hExecution', {hour: 6, minute: 5}, () => { random_stats_service.collectRandomStats(8) });
+            schedule.scheduleJob('Every6hExecution', {hour: 12, minute: 5}, () => { random_stats_service.collectRandomStats(8) });
+            schedule.scheduleJob('Every6hExecution', {hour: 18, minute: 5}, () => { random_stats_service.collectRandomStats(8) });
 
         }
     } catch(err) {

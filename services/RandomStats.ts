@@ -127,7 +127,7 @@ export class RandomStatsService {
             }
             //Amount of Deposits
             case 7: {
-                let amountOfDeposits = await statsApi.callAggregateApi("?type=deposit", from_date, to_date);
+                let amountOfDeposits = await statsApi.getNumberOfXRPDeposited(from_date, to_date);
                 if(amountOfDeposits > 0)
                     statsText = "In the last " + this.timeframe + " an overall of " + amountOfDeposits + " #XRP were deposited into @xrptipbot accounts.";
                 else
@@ -136,7 +136,7 @@ export class RandomStatsService {
             }
             //Amount of Withdraw
             case 8: {
-                let amountOfWithdrawals = await statsApi.callAggregateApi("?type=withdraw", from_date, to_date);
+                let amountOfWithdrawals = await statsApi.getNumberOfXRPWithdrawn(from_date, to_date);
                 if(amountOfWithdrawals > 0)
                     statsText = "In the last " + this.timeframe + " an overall of " + amountOfWithdrawals + " #XRP were withdrawn from @xrptipbot accounts.";
                 else

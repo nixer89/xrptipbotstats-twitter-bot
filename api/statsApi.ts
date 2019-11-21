@@ -17,23 +17,20 @@ export class StatsApi {
     }
 
     async getNumberOfXRPSent(from?:Date, to?:Date): Promise<number> {
-        let xrp:number = await this.callAggregateApi("?type=tip",from, to);
-        return (xrp*config.XRP_DROPS)/config.XRP_DROPS;
+        return this.callAggregateApi("?type=tip",from, to);
+        
     }
 
     async getNumberOfXRPDeposited(from?:Date, to?:Date): Promise<number> {
-        let xrp:number = await this.callAggregateApi("?type=deposit",from, to);
-        return (xrp*config.XRP_DROPS)/config.XRP_DROPS;
+        return this.callAggregateApi("?type=deposit",from, to);
     }
 
     async getNumberOfXRPWithdrawn(from?:Date, to?:Date): Promise<number> {
-        let xrp:number = await this.callAggregateApi("?type=withdraw",from, to);
-        return (xrp*config.XRP_DROPS)/config.XRP_DROPS;
+        return this.callAggregateApi("?type=withdraw",from, to);
     }
 
     async getXRPDepositsILP(from?:Date, to?:Date): Promise<number> {
-        let amount:number = await this.callAggregateILPApi("?type=ILP deposit",from, to);
-        return amount/config.XRP_DROPS;
+        return this.callAggregateILPApi("?type=ILP deposit",from, to);
     }
 
     async getHighestDeposit(from?:Date, to?:Date): Promise<any> {
@@ -97,7 +94,7 @@ export class StatsApi {
 
     async callAggregateApi(queryParams:string, from_date?:Date, to_date?:Date): Promise<number> {
         let apiResponse:any = await this.callApi(config.TIPBOT_AGGREGATE_API+queryParams+this.getFromToQueryString(from_date,to_date));
-        return apiResponse.xrp;
+        return (apiResponse.xrp*config.XRP_DROPS)/config.XRP_DROPS;
     }
 
     async callAggregateApiMostReceived(queryParams:string, from_date?:Date, to_date?:Date): Promise<any[]> {
@@ -120,7 +117,7 @@ export class StatsApi {
     async callAggregateILPApi(queryParams:string, from_date?:Date, to_date?:Date): Promise<number> {
         //console.log(config.TIPBOT_AGGREGATE_ILP_API+queryParams);
         let apiResponse:any = await this.callApi(config.TIPBOT_AGGREGATE_ILP_API+queryParams+this.getFromToQueryString(from_date,to_date));
-        return apiResponse.amount;
+        return apiResponse.amount/config.XRP_DROPS;
     }
 
     // ######## DISTINCT API ########
