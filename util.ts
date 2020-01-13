@@ -5,8 +5,12 @@ export function writeConsoleLog(prefixKey:string, message:string) {
 export function getUserNameNetwork(stats:any): string {
     if("twitter"===stats['_id'].network)
         return "@"+stats.userName;
+    else if("coil" === stats['_id'].network)
+        return "Coil user '"+stats.userName.substring(0,16)+"…'";
+    else if("internal" === stats['_id'].network)
+        return "Paper account '"+stats.userName.substring(0,16)+"…'";
     else
-        return stats.userName +" from " + stats['_id'].network;
+        return stats.userName +" from " + stats['_id'].network; 
 }
 
 export function setZeroHours(date: Date): Date {

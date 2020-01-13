@@ -39,7 +39,7 @@ export class RandomStatsService {
 
         //always choose another randon number (not previous one!)
         do {
-            randomNumber = util.getRandomInt(22)
+            randomNumber = util.getRandomInt(25)
         } while(this.lastRandomNumberStats == randomNumber)
         
         
@@ -364,6 +364,27 @@ export class RandomStatsService {
                 statsText+= "\nDiscord: " + uniqueUsersTipReceivedReddit;
                 statsText+= "\nCoil: " + uniqueUsersTipReceivedCoil;
                 statsText+= "\nPaperAccount: " + uniqueUsersTipReceivedPaper;
+                break;
+            }
+            //ILP stats overall
+            case 22: {
+                let ilpDepositsAll = await statsApi.callAggregateILPApi("");
+                statsText = "Since Feb 2019, an overall of " + ilpDepositsAll + " $XRP has been streamed through #ILP to @xrptipbot accounts.";
+                break;
+            }
+            case 23: {
+                let ilpDepositsTimeFrame = await statsApi.callAggregateILPApi("", from_date, to_date);
+                statsText = ilpDepositsTimeFrame + " $XRP has been streamed through ILP to @xrptipbot accounts in the last " + this.timeframe;
+                break;
+            }
+            case 24: {
+                let mostReceivedXRPviaILP = await statsApi.callAggregateILPApiTopReceiver("?limit=5", from_date, to_date);
+                console.log(mostReceivedXRPviaILP);
+                if(mostReceivedXRPviaILP && mostReceivedXRPviaILP[0]) {
+                    statsText = util.getUserNameNetwork(mostReceivedXRPviaILP[0]) + " received the most #XRP through ILP streams in the last "+this.timeframe+": " +mostReceivedXRPviaILP[0].amount/1000000 + " $XRP";
+                    statsText+= util.getLinkTextUser(mostReceivedXRPviaILP[0],from_date, to_date, false);
+                } else
+                    this.generateRandomStatsTweet(from_date, to_date);
                 break;
             }
             default: {

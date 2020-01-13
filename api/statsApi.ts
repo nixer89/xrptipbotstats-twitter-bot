@@ -10,6 +10,7 @@ export class StatsApi {
 
     proxy = new HttpsProxyAgent("http://proxy:81");
     useProxy = false;
+    coilAccounts:string[] = ['COIL_SETTLED_ILP_BALANCE', 'COIL_SETTLEMENT_ACCOUNT'];
 
     // ############################################## API Methods to use ##############################################
     async getNumberOfTips(from?:Date, to?:Date): Promise<number> {
@@ -69,70 +70,77 @@ export class StatsApi {
     // ######## STD Feed API ########
 
     async callStdFeedApi(queryParams:string, from_date?:Date, to_date?:Date ): Promise<any[]> {
-        let apiResponse:any = await this.callApi(config.TIPBOT_FEED_API+queryParams+this.getFromToQueryString(from_date,to_date));
+        let apiResponse:any = await this.callApi(config.TIPBOT_FEED_API+queryParams+this.getFromToQueryString(from_date,to_date,queryParams));
         return apiResponse.feed;
     }
 
     // ######## Count API ########
 
     async callCountApi(queryParams:string, from_date?:Date, to_date?:Date): Promise<number> {
-        let apiResponse:any = await this.callApi(config.TIPBOT_COUNT_API+queryParams+this.getFromToQueryString(from_date,to_date));
+        let apiResponse:any = await this.callApi(config.TIPBOT_COUNT_API+queryParams+this.getFromToQueryString(from_date,to_date,queryParams));
         return apiResponse.count;
     }
 
     async callCountApiMostReceived(queryParams:string, from_date?:Date, to_date?:Date): Promise<any[]> {
-        let apiResponse:any = await this.callApi(config.TIPBOT_COUNT_API+"/mostReceivedFrom"+queryParams+this.getFromToQueryString(from_date,to_date));
+        let apiResponse:any = await this.callApi(config.TIPBOT_COUNT_API+"/mostReceivedFrom"+queryParams+this.getFromToQueryString(from_date,to_date,queryParams));
         return apiResponse.result;
     }
 
     async callCountApiMostSent(queryParams:string, from_date?:Date, to_date?:Date): Promise<any[]> {
-        let apiResponse:any = await this.callApi(config.TIPBOT_COUNT_API+"/mostSentTo"+queryParams+this.getFromToQueryString(from_date,to_date));
+        let apiResponse:any = await this.callApi(config.TIPBOT_COUNT_API+"/mostSentTo"+queryParams+this.getFromToQueryString(from_date,to_date,queryParams));
         return apiResponse.result;
     }
 
     // ######## Aggregate API ########
 
     async callAggregateApi(queryParams:string, from_date?:Date, to_date?:Date): Promise<number> {
-        let apiResponse:any = await this.callApi(config.TIPBOT_AGGREGATE_API+queryParams+this.getFromToQueryString(from_date,to_date));
+        let apiResponse:any = await this.callApi(config.TIPBOT_AGGREGATE_API+queryParams+this.getFromToQueryString(from_date,to_date,queryParams));
         return (apiResponse.xrp*config.XRP_DROPS)/config.XRP_DROPS;
     }
 
     async callAggregateApiMostReceived(queryParams:string, from_date?:Date, to_date?:Date): Promise<any[]> {
-        let apiResponse:any = await this.callApi(config.TIPBOT_AGGREGATE_API+"/mostReceivedFrom"+queryParams+this.getFromToQueryString(from_date,to_date));
+        let apiResponse:any = await this.callApi(config.TIPBOT_AGGREGATE_API+"/mostReceivedFrom"+queryParams+this.getFromToQueryString(from_date,to_date,queryParams));
         return apiResponse.result;
     }
 
     async callAggregateApiMostSent(queryParams:string, from_date?:Date, to_date?:Date): Promise<any[]> {
-        let apiResponse:any = await this.callApi(config.TIPBOT_AGGREGATE_API+"/mostSentTo"+queryParams+this.getFromToQueryString(from_date,to_date));
+        let apiResponse:any = await this.callApi(config.TIPBOT_AGGREGATE_API+"/mostSentTo"+queryParams+this.getFromToQueryString(from_date,to_date,queryParams));
         return apiResponse.result;
     }
 
     // ######## ILP API ########
 
     async callILPApi(queryParams:string, from_date?:Date, to_date?:Date): Promise<any[]> {
-        let apiResponse:any = this.callApi(config.TIPBOT_ILP_API+queryParams+this.getFromToQueryString(from_date,to_date));
+        let apiResponse:any = this.callApi(config.TIPBOT_ILP_API+queryParams+this.getFromToQueryString(from_date,to_date,queryParams));
         return apiResponse.feed;
     }
 
     async callAggregateILPApi(queryParams:string, from_date?:Date, to_date?:Date): Promise<number> {
-        //console.log(config.TIPBOT_AGGREGATE_ILP_API+queryParams);
-        let apiResponse:any = await this.callApi(config.TIPBOT_AGGREGATE_ILP_API+queryParams+this.getFromToQueryString(from_date,to_date));
+        //console.log(config.TIPBOT_AGGREGATE_ILP_API+this.getFromToQueryString(from_date,to_date));
+        let apiResponse:any = await this.callApi(config.TIPBOT_AGGREGATE_ILP_API+queryParams+this.getFromToQueryString(from_date,to_date,queryParams));
         return apiResponse.amount/config.XRP_DROPS;
+    }
+
+    async callAggregateILPApiTopReceiver(queryParams:string, from_date?:Date, to_date?:Date): Promise<any> {
+        let apiResponse:any = await this.callApi(config.TIPBOT_AGGREGATE_ILP_API+'/mostReceived'+queryParams+this.getFromToQueryString(from_date, to_date,queryParams));
+        return apiResponse.result;
     }
 
     // ######## DISTINCT API ########
 
     async callDistinctApi(distinctField: string, queryParams: string, from_date?:Date, to_date?: Date) : Promise<number> {
         //console.log(config.TIPBOT_DISTINCT_API+queryParams+"&distinct="+distinctField+"&from_date="+util.dateToStringEuropeForAPI(from_date)+"&to_date="+util.dateToStringEuropeForAPI(to_date));
-        let apiResponse:any = await this.callApi(config.TIPBOT_DISTINCT_API+queryParams+"&distinct="+distinctField+this.getFromToQueryString(from_date,to_date));
+        let apiResponse:any = await this.callApi(config.TIPBOT_DISTINCT_API+queryParams+"&distinct="+distinctField+this.getFromToQueryString(from_date,to_date,queryParams));
         return apiResponse.distinctCount;
     }
 
     // ######## Standard Fetch Method ########
 
-    async callApi(url: string) : Promise<any> {
-        //console.log("calling: " + url);
+    async callApi(url: string, includeCoil?: boolean) : Promise<any> {
         try {
+            if(!includeCoil)
+                url+= (url.includes("?") ? "&" : "?")+"excludeUser="+JSON.stringify(this.coilAccounts);
+        
             let apiResponse = await fetch.default(url, { headers: {"Content-Type": "application/json"}, agent: this.useProxy ? this.proxy : null, method: 'GET'});
             if(apiResponse && apiResponse.ok) {
                 return apiResponse.json();
@@ -146,9 +154,9 @@ export class StatsApi {
         }
     }
 
-    getFromToQueryString(from_date:Date, to_date:Date): string {
+    getFromToQueryString(from_date:Date, to_date:Date, queryParams:string): string {
         if(from_date && to_date)
-            return "&from_date="+util.dateToStringEuropeForAPI(from_date)+"&to_date="+util.dateToStringEuropeForAPI(to_date);
+            return ((queryParams && queryParams.includes("?")) ? "&" : "?")+"from_date="+util.dateToStringEuropeForAPI(from_date)+"&to_date="+util.dateToStringEuropeForAPI(to_date);
         else 
             return "";
     }
