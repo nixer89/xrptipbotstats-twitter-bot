@@ -248,11 +248,11 @@ export class RandomStatsService {
                     let uniqueUsersPreviousPeriod = await statsApi.callDistinctApi("user","?type=tip",from_date,to_date);
 
                     if(uniqueUsersPreviousPeriod > 0 && uniqueUsersCurrentPeriod > 0) {
-                        let increaseOrDecrease = Math.round(((uniqueUsersPreviousPeriod*100/uniqueUsersCurrentPeriod)-100)*100)/100;
+                        let increaseOrDecrease = Math.round(((uniqueUsersCurrentPeriod*100/uniqueUsersPreviousPeriod)-100)*100)/100;
 
-                        statsText= uniqueUsersPreviousPeriod + " unique users have sent a tip through the @xrptipbot in the last " + this.timeframe + ".";
+                        statsText= uniqueUsersCurrentPeriod + " unique users have sent a tip through the @xrptipbot in the last " + this.timeframe + ".";
                         statsText+= "\nThat is " + (increaseOrDecrease > 0 ? "an increase 📈  of " + increaseOrDecrease : "a decrease 📉  of " + Math.abs(increaseOrDecrease)) + "% to the previous period."
-                        statsText+= "\n\nPrevious period: " + uniqueUsersCurrentPeriod + " unique users."
+                        statsText+= "\n\nPrevious period: " + uniqueUsersPreviousPeriod + " unique users."
                     } else
                         this.generateRandomStatsTweet(from_orig, to_orig);
 
@@ -273,11 +273,11 @@ export class RandomStatsService {
                     let uniqueUsersPreviousPeriod = await statsApi.callDistinctApi("to","?type=tip",from_date,to_date);
 
                     if(uniqueUsersPreviousPeriod > 0 && uniqueUsersCurrentPeriod > 0) {
-                        let increaseOrDecrease = Math.round(((uniqueUsersPreviousPeriod*100/uniqueUsersCurrentPeriod)-100)*100)/100;
+                        let increaseOrDecrease = Math.round(((uniqueUsersCurrentPeriod*100/uniqueUsersPreviousPeriod)-100)*100)/100;
 
-                        statsText= uniqueUsersPreviousPeriod + " unique users have received a tip through the @xrptipbot in the last " + this.timeframe + ".";
+                        statsText= uniqueUsersCurrentPeriod + " unique users have received a tip through the @xrptipbot in the last " + this.timeframe + ".";
                         statsText+= "\nThat is " + (increaseOrDecrease > 0 ? "an increase 📈  of " + increaseOrDecrease : "a decrease 📉  of " + Math.abs(increaseOrDecrease)) + "% to the previous period."
-                        statsText+= "\n\nPrevious period: " + uniqueUsersCurrentPeriod + " unique users."
+                        statsText+= "\n\nPrevious period: " + uniqueUsersPreviousPeriod + " unique users."
                     } else
                         this.generateRandomStatsTweet(from_orig, to_orig);
 
@@ -360,8 +360,8 @@ export class RandomStatsService {
 
                 statsText = "Unique users which received a tip in the last " + this.timeframe+" :";
                 statsText+= "\n\nTwitter: " + uniqueUsersTipReceivedTwitter;
-                statsText+= "\nReddit: " + uniqueUsersTipReceivedDiscord;
-                statsText+= "\nDiscord: " + uniqueUsersTipReceivedReddit;
+                statsText+= "\nReddit: " + uniqueUsersTipReceivedReddit;
+                statsText+= "\nDiscord: " + uniqueUsersTipReceivedDiscord;
                 statsText+= "\nCoil: " + uniqueUsersTipReceivedCoil;
                 statsText+= "\nPaperAccount: " + uniqueUsersTipReceivedPaper;
                 break;

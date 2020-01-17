@@ -156,7 +156,7 @@ export class StatsApi {
 
     getFromToQueryString(from_date:Date, to_date:Date, queryParams:string): string {
         if(from_date && to_date)
-            return ((queryParams && queryParams.includes("?")) ? "&" : "?")+"from_date="+util.dateToStringEuropeForAPI(from_date)+"&to_date="+util.dateToStringEuropeForAPI(to_date);
+            return ((queryParams && queryParams.includes("?")) ? "&" : "?")+"from_date="+from_date.toUTCString()+"&to_date="+to_date.toUTCString();
         else 
             return "";
     }
